@@ -138,3 +138,40 @@ body {
 .error-message {
     color: red;
 }
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.patient-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.patient-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.patient-list-item h2 {
+    margin-top: 0;
+}
+
+.patient-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.patient-actions button,
+.page-header button {
+    padding: 10px 16px;
+    cursor: pointer;
+}
