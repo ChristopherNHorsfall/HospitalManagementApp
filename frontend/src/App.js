@@ -1,41 +1,93 @@
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import axios from "axios";
 
 function App() {
-  return (
-    <div className="login-page">
-      <div className="login-container">
-        <h1>Welcome to Hospital Management App</h1>
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [isError, setIsError] = useState(false);
 
-        <form className="login-form">
-          <h2>Login</h2>
+    const handleLogin = async (event) => {
+        event.preventDefault();
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
+        setMessage("");
+        setIsError(false);
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
+        try {
+            const response = await axios.post(
+                "http://localhost:5000/api/auth/login",
+                {
+                    email,
+                    password,
+                },
+            );
 
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    </div>
-  );
+            setMessage("Login successful");
+            setIsError(false);
+
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+        } catch (error) {
+            setIsError(true);
+
+            if (error.response?.data?.message) {
+                setMessage(error.response.data.message);
+            } else {
+                setMessage("Unable to connect to the server");
+            }
+        }
+    };
+
+    return (
+        <div className="login-page">
+            <div className="login-container">
+                <h1>Welcome to Hospital Management App</h1>
+
+                <form className="login-form" onSubmit={handleLogin}>
+                    <h2>Login</h2>
+
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            placeholder="Enter your email"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(event) =>
+                                setPassword(event.target.value)
+                            }
+                            placeholder="Enter your password"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit">Login</button>
+
+                    {message && (
+                        <p
+                            className={
+                                isError ? "login-error" : "login-success"
+                            }
+                        >
+                            {message}
+                        </p>
+                    )}
+                </form>
+            </div>
+        </div>
+    );
 }
 
 export default App;

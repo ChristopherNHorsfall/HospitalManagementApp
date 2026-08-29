@@ -1,20 +1,29 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const express = require("express");
+const dotenv = require("dotenv");
+const connectDB = require("./config/db");
+const cors = require("cors");
+const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const authRoutes = require('./routes/authRoutes');
+
+
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+    }),
+);
 
 app.use(express.json());
-app.use('/api/auth', authRoutes);
 
 connectDB();
 
-app.get('/', (req, res) => {
-    res.json({ message: 'Hospital Management API is running' });
+app.use("/api/auth", authRoutes);
+
+app.get("/", (req, res) => {
+    res.json({ message: "Hospital Management API is running" });
 });
 
 app.listen(PORT, () => {
