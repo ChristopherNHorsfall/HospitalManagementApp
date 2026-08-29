@@ -1,92 +1,46 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import LoginPage from "./pages/LoginPage";
+import WardsPage from "./pages/WardsPage";
+import WardPatientsPage from "./pages/WardPatientsPage";
+
 import "./App.css";
-import { useState } from "react";
-import axios from "axios";
+
+function ProtectedRoute({ children }) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
+}
 
 function App() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
-    const [isError, setIsError] = useState(false);
-
-    const handleLogin = async (event) => {
-        event.preventDefault();
-
-        setMessage("");
-        setIsError(false);
-
-        try {
-            const response = await axios.post(
-                "http://localhost:5000/api/auth/login",
-                {
-                    email,
-                    password,
-                },
-            );
-
-            setMessage("Login successful");
-            setIsError(false);
-
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
-        } catch (error) {
-            setIsError(true);
-
-            if (error.response?.data?.message) {
-                setMessage(error.response.data.message);
-            } else {
-                setMessage("Unable to connect to the server");
-            }
-        }
-    };
-
     return (
-        <div className="login-page">
-            <div className="login-container">
-                <h1>Welcome to Hospital Management App</h1>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<LoginPage />} />
 
-                <form className="login-form" onSubmit={handleLogin}>
-                    <h2>Login</h2>
+                <Route
+                    path="/wards"
+                    element={
+                        <ProtectedRoute>
+                            <WardsPage />
+                        </ProtectedRoute>
+                    }
+                />
 
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
-                            placeholder="Enter your email"
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(event) =>
-                                setPassword(event.target.value)
-                            }
-                            placeholder="Enter your password"
-                            required
-                        />
-                    </div>
-
-                    <button type="submit">Login</button>
-
-                    {message && (
-                        <p
-                            className={
-                                isError ? "login-error" : "login-success"
-                            }
-                        >
-                            {message}
-                        </p>
-                    )}
-                </form>
-            </div>
-        </div>
+                <Route
+                    path="/wards/:wardId"
+                    element={
+                        <ProtectedRoute>
+                            <WardPatientsPage />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+        </BrowserRouter>
     );
 }
 
