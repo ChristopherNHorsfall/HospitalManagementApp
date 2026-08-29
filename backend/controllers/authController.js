@@ -5,13 +5,25 @@ const jwt = require("jsonwebtoken");
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!email || !password) {
             return res.status(400).json({
                 message: "Email and password are required",
             });
         }
+        if (!emailPattern.test(email)) {
+            return res.status(400).json({
+                message: "Invalid email format",
+            });
+        }
 
+        if (typeof password !== "string" || password.trim() === "") {
+            return res.status(400).json({
+                message: "Password is required",
+            });
+        }
+        
         const user = await User.findOne({ email });
 
         if (!user) {
