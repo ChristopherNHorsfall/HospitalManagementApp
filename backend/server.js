@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const wardRoutes = require('./routes/wardRoutes');
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/auth", authRoutes);
+app.use('/api/wards', wardRoutes);
 
 app.get("/", (req, res) => {
     res.json({ message: "Hospital Management API is running" });
