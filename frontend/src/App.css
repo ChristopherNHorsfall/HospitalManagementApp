@@ -203,12 +203,53 @@ body {
 }
 
 .form-error {
-  color: red;
-  margin-top: 5px;
-  font-size: 14px;
+    color: red;
+    margin-top: 5px;
+    font-size: 14px;
 }
 
 .success-message {
     color: green;
     margin-bottom: 15px;
+}
+.patient-record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.patient-record-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.patient-record-actions button {
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.record-section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.record-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.record-section-header h2 {
+    margin-top: 0;
+}
+
+.record-section-header button {
+    padding: 8px 14px;
+    cursor: pointer;
 }

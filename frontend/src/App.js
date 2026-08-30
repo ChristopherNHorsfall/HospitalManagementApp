@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import WardsPage from "./pages/WardsPage";
 import WardPatientsPage from "./pages/WardPatientsPage";
 import PatientAdmissionPage from "./pages/PatientAdmissionPage";
+import PatientRecordPage from "./pages/PatientRecordPage";
 
 import "./App.css";
 
@@ -31,7 +32,6 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-
                 <Route
                     path="/wards/:wardId"
                     element={
@@ -40,12 +40,19 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-
                 <Route
                     path="/wards/:wardId/admit"
                     element={
                         <ProtectedRoute>
                             <PatientAdmissionPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/patients/:patientId"
+                    element={
+                        <ProtectedRoute>
+                            <PatientRecordPage />
                         </ProtectedRoute>
                     }
                 />
