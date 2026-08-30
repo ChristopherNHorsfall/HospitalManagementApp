@@ -258,3 +258,8 @@ body {
     margin-top: 5px;
     font-size: 14px;
 }
+
+.success-message {
+    color: green;
+    margin-bottom: 15px;
+}

@@ -16,6 +16,9 @@ function PatientEditPage() {
     const [error, setError] = useState("");
     const [errors, setErrors] = useState({});
 
+    const [successMessage, setSuccessMessage] = useState("");
+    const [submitError, setSubmitError] = useState("");
+
     useEffect(() => {
         const getPatient = async () => {
             try {
@@ -50,6 +53,9 @@ function PatientEditPage() {
     }, [patientId]);
 
     const handleSubmit = async (event) => {
+        setSuccessMessage("");
+        setSubmitError("");
+
         event.preventDefault();
 
         const newErrors = {};
@@ -101,9 +107,17 @@ function PatientEditPage() {
                 },
             );
 
-            navigate(`/patients/${patientId}`);
+            setSuccessMessage("Patient details updated successfully");
+
+            setTimeout(() => {
+                navigate(`/patients/${patientId}`);
+            }, 1000);
         } catch (error) {
-            console.error("Unable to update patient:", error);
+            if (error.response?.data?.message) {
+                setSubmitError(error.response.data.message);
+            } else {
+                setSubmitError("Unable to update patient");
+            }
         }
     };
 
@@ -128,6 +142,11 @@ function PatientEditPage() {
                 </div>
 
                 {error && <p className="error-message">{error}</p>}
+                {successMessage && (
+                    <p className="success-message">{successMessage}</p>
+                )}
+
+                {submitError && <p className="error-message">{submitError}</p>}
 
                 <form className="patient-form" onSubmit={handleSubmit}>
                     <div className="form-group">
