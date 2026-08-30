@@ -13,6 +13,8 @@ function WardPatientsPage() {
     const [patientToDischarge, setPatientToDischarge] = useState(null);
     const [error, setError] = useState("");
     const user = JSON.parse(localStorage.getItem("user"));
+    const [successMessage, setSuccessMessage] = useState("");
+    const [submitError, setSubmitError] = useState("");
 
     useEffect(() => {
         const getWardData = async () => {
@@ -58,6 +60,8 @@ function WardPatientsPage() {
 
     const handleDischarge = async () => {
         try {
+            setSuccessMessage("");
+            setSubmitError("");
             const token = localStorage.getItem("token");
 
             await axios.delete(
@@ -69,6 +73,8 @@ function WardPatientsPage() {
                 },
             );
 
+            const dischargedName = patientToDischarge.name;
+
             setPatients(
                 patients.filter(
                     (patient) => patient._id !== patientToDischarge._id,
@@ -76,8 +82,15 @@ function WardPatientsPage() {
             );
 
             setPatientToDischarge(null);
+            setSuccessMessage(`${dischargedName} discharged successfully`);
         } catch (error) {
-            console.error("Unable to discharge patient:", error);
+            setPatientToDischarge(null);
+
+            if (error.response?.data?.message) {
+                setSubmitError(error.response.data.message);
+            } else {
+                setSubmitError("Unable to discharge patient");
+            }
         }
     };
     return (
@@ -101,6 +114,11 @@ function WardPatientsPage() {
                 </div>
 
                 {error && <p className="error-message">{error}</p>}
+                {successMessage && (
+                    <p className="success-message">{successMessage}</p>
+                )}
+
+                {submitError && <p className="error-message">{submitError}</p>}
 
                 <div className="patient-list">
                     {patients.map((patient) => (

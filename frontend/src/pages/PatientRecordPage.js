@@ -10,6 +10,8 @@ function PatientRecordPage() {
     const [patient, setPatient] = useState(null);
     const [error, setError] = useState("");
     const [showDischargeConfirm, setShowDischargeConfirm] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [submitError, setSubmitError] = useState("");
 
     useEffect(() => {
         const getPatient = async () => {
@@ -58,6 +60,8 @@ function PatientRecordPage() {
 
     const handleDischarge = async () => {
         try {
+            setSubmitError("");
+
             const token = localStorage.getItem("token");
 
             await axios.delete(
@@ -69,9 +73,20 @@ function PatientRecordPage() {
                 },
             );
 
-            navigate(`/wards/${patient.ward._id}`);
+            setShowDischargeConfirm(false);
+            setSuccessMessage("Patient discharged successfully");
+
+            setTimeout(() => {
+                navigate(`/wards/${patient.ward._id}`);
+            }, 1000);
         } catch (error) {
-            console.error("Unable to discharge patient:", error);
+            setShowDischargeConfirm(false);
+
+            if (error.response?.data?.message) {
+                setSubmitError(error.response.data.message);
+            } else {
+                setSubmitError("Unable to discharge patient");
+            }
         }
     };
 
@@ -90,7 +105,10 @@ function PatientRecordPage() {
                         </button>
                     </div>
                 </div>
-
+                {error && <p className="error-message">{error}</p>}
+                {successMessage && (
+                    <p className="success-message">{successMessage}</p>
+                )}
                 <section className="record-section">
                     <div className="record-section-header">
                         <h2>Basic Details</h2>
