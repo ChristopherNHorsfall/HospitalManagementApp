@@ -49,7 +49,7 @@ function PatientEditPage() {
         getPatient();
     }, [patientId]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const newErrors = {};
@@ -83,12 +83,28 @@ function PatientEditPage() {
             return;
         }
 
-        console.log({
-            name,
-            dateOfBirth,
-            gender,
-            contactNumber,
-        });
+        try {
+            const token = localStorage.getItem("token");
+
+            await axios.put(
+                `http://localhost:5000/api/patients/${patientId}`,
+                {
+                    name,
+                    dateOfBirth,
+                    gender,
+                    contactNumber,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
+            navigate(`/patients/${patientId}`);
+        } catch (error) {
+            console.error("Unable to update patient:", error);
+        }
     };
 
     const handleCancel = () => {
