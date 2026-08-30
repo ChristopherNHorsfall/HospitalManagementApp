@@ -54,8 +54,31 @@ const createPatient = async (req, res) => {
         });
     }
 };
+const getPatientById = async (req, res) => {
+    try {
+        const patient = await Patient.findById(req.params.patientId).populate(
+            "ward",
+            "name type capacity",
+        );
+
+        if (!patient) {
+            return res.status(404).json({
+                message: "Patient not found",
+            });
+        }
+
+        res.status(200).json(patient);
+    } catch (error) {
+        console.error("Error retrieving patient:", error);
+
+        res.status(500).json({
+            message: "Server error",
+        });
+    }
+};
 
 module.exports = {
     getPatientsByWard,
     createPatient,
+    getPatientById,
 };
