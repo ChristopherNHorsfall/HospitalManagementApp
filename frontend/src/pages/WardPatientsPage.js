@@ -10,6 +10,7 @@ function WardPatientsPage() {
 
     const [patients, setPatients] = useState([]);
     const [error, setError] = useState("");
+    const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
         const getWardData = async () => {
@@ -64,7 +65,13 @@ function WardPatientsPage() {
                         <h3>Patients</h3>
                     </div>
 
-                    <button>Admit Patient</button>
+                    {user?.role === "doctor" && (
+                        <button
+                            onClick={() => navigate(`/wards/${wardId}/admit`)}
+                        >
+                            Admit Patient
+                        </button>
+                    )}
                 </div>
 
                 {error && <p className="error-message">{error}</p>}

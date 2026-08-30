@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import WardsPage from "./pages/WardsPage";
 import WardPatientsPage from "./pages/WardPatientsPage";
+import PatientAdmissionPage from "./pages/PatientAdmissionPage";
 
 import "./App.css";
 
@@ -36,6 +37,15 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <WardPatientsPage />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/wards/:wardId/admit"
+                    element={
+                        <ProtectedRoute>
+                            <PatientAdmissionPage />
                         </ProtectedRoute>
                     }
                 />
