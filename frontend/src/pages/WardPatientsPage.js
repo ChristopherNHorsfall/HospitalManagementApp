@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import DischargeConfirmation from "../components/DischargeConfirmation";
 
 function WardPatientsPage() {
     const { wardId } = useParams();
@@ -9,6 +10,7 @@ function WardPatientsPage() {
     const [ward, setWard] = useState(null);
 
     const [patients, setPatients] = useState([]);
+    const [patientToDischarge, setPatientToDischarge] = useState(null);
     const [error, setError] = useState("");
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -99,11 +101,26 @@ function WardPatientsPage() {
 
                                 <button>Transfer</button>
 
-                                <button>Discharge</button>
+                                <button
+                                    onClick={() =>
+                                        setPatientToDischarge(patient)
+                                    }
+                                >
+                                    Discharge
+                                </button>
                             </div>
                         </div>
                     ))}
                 </div>
+                {patientToDischarge && (
+                    <DischargeConfirmation
+                        patient={patientToDischarge}
+                        onCancel={() => setPatientToDischarge(null)}
+                        onConfirm={() => {
+                            // Delete API will be added later
+                        }}
+                    />
+                )}
             </main>
         </>
     );

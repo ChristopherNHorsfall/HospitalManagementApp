@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import DischargeConfirmation from "../components/DischargeConfirmation";
 
 function PatientRecordPage() {
     const { patientId } = useParams();
     const navigate = useNavigate();
     const [patient, setPatient] = useState(null);
     const [error, setError] = useState("");
+    const [showDischargeConfirm, setShowDischargeConfirm] = useState(false);
 
     useEffect(() => {
         const getPatient = async () => {
@@ -64,7 +66,9 @@ function PatientRecordPage() {
 
                     <div className="patient-record-actions">
                         <button>Transfer</button>
-                        <button>Discharge</button>
+                        <button onClick={() => setShowDischargeConfirm(true)}>
+                            Discharge
+                        </button>
                     </div>
                 </div>
 
@@ -129,6 +133,16 @@ function PatientRecordPage() {
 
                     <p>No history recorded.</p>
                 </section>
+
+                {showDischargeConfirm && (
+                    <DischargeConfirmation
+                        patient={patient}
+                        onCancel={() => setShowDischargeConfirm(false)}
+                        onConfirm={() => {
+                            // Delete API will be added later
+                        }}
+                    />
+                )}
             </main>
         </>
     );
