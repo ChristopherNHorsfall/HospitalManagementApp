@@ -24,7 +24,7 @@ function PatientRecordPage() {
                 const token = localStorage.getItem("token");
 
                 const response = await axios.get(
-                    `http://localhost:5000/api/patients/${patientId}`,
+                    `/api/patients/${patientId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ function PatientRecordPage() {
             const token = localStorage.getItem("token");
 
             await axios.delete(
-                `http://localhost:5000/api/patients/${patientId}`,
+                `/api/patients/${patientId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ function PatientRecordPage() {
             const token = localStorage.getItem("token");
 
             await axios.patch(
-                `http://localhost:5000/api/patients/${patientId}/transfer`,
+                `/api/patients/${patientId}/transfer`,
                 {
                     ward: destinationWardId,
                 },

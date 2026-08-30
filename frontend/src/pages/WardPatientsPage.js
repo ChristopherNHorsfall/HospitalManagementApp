@@ -34,7 +34,7 @@ function WardPatientsPage() {
 
                 // Get wards
                 const wardsResponse = await axios.get(
-                    "http://localhost:5000/api/wards",
+                    "/api/wards",
                     config,
                 );
 
@@ -46,7 +46,7 @@ function WardPatientsPage() {
 
                 // Get patients belonging to this ward
                 const patientsResponse = await axios.get(
-                    `http://localhost:5000/api/patients/ward/${wardId}`,
+                    `/api/patients/ward/${wardId}`,
                     config,
                 );
 
@@ -109,7 +109,7 @@ function WardPatientsPage() {
             const patientName = patientToTransfer.name;
 
             await axios.patch(
-                `http://localhost:5000/api/patients/${patientToTransfer._id}/transfer`,
+                `/api/patients/${patientToTransfer._id}/transfer`,
                 {
                     ward: destinationWardId,
                 },

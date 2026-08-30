@@ -63,7 +63,7 @@ function PatientAdmissionPage() {
             const token = localStorage.getItem("token");
 
             await axios.post(
-                "http://localhost:5000/api/patients",
+                "/api/patients",
                 {
                     name,
                     dateOfBirth,

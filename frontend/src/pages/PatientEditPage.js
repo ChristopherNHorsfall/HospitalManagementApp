@@ -25,7 +25,7 @@ function PatientEditPage() {
                 const token = localStorage.getItem("token");
 
                 const response = await axios.get(
-                    `http://localhost:5000/api/patients/${patientId}`,
+                    `/api/patients/${patientId}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ function PatientEditPage() {
             const token = localStorage.getItem("token");
 
             await axios.put(
-                `http://localhost:5000/api/patients/${patientId}`,
+                `/api/patients/${patientId}`,
                 {
                     name,
                     dateOfBirth,
