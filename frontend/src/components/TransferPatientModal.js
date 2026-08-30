@@ -39,6 +39,10 @@ function TransferPatientModal({ patient, currentWardId, onCancel, onConfirm }) {
             setError("Please select a destination ward");
             return;
         }
+        if (selectedWardId === currentWardId) {
+            setError("Patient is already assigned to this ward");
+            return;
+        }
 
         onConfirm(selectedWardId);
     };
