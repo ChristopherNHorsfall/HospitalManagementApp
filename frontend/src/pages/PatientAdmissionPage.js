@@ -12,8 +12,12 @@ function PatientAdmissionPage() {
     const [gender, setGender] = useState("");
     const [contactNumber, setContactNumber] = useState("");
     const [errors, setErrors] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
+    const [submitError, setSubmitError] = useState("");
 
     const handleSubmit = async (event) => {
+        setSuccessMessage("");
+        setSubmitError("");
         event.preventDefault();
 
         const newErrors = {};
@@ -73,10 +77,17 @@ function PatientAdmissionPage() {
                     },
                 },
             );
+            setSuccessMessage("Patient admitted successfully");
 
-            navigate(`/wards/${wardId}`);
+            setTimeout(() => {
+                navigate(`/wards/${wardId}`);
+            }, 1000);
         } catch (error) {
-            console.error("Unable to admit patient:", error);
+            if (error.response?.data?.message) {
+                setSubmitError(error.response.data.message);
+            } else {
+                setSubmitError("Unable to admit patient");
+            }
         }
     };
     const handleCancel = () => {
@@ -92,6 +103,13 @@ function PatientAdmissionPage() {
                 <p>Enter the patient's details below.</p>
 
                 <form className="patient-form" onSubmit={handleSubmit}>
+                    {successMessage && (
+                        <p className="success-message">{successMessage}</p>
+                    )}
+
+                    {submitError && (
+                        <p className="error-message">{submitError}</p>
+                    )}
                     <div className="form-group">
                         <label htmlFor="name">Patient Name</label>
                         <input
