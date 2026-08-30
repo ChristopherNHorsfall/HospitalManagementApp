@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import DischargeConfirmation from "../components/DischargeConfirmation";
+import TransferPatientModal from "../components/TransferPatientModal";
 
 function PatientRecordPage() {
     const { patientId } = useParams();
@@ -12,6 +13,8 @@ function PatientRecordPage() {
     const [showDischargeConfirm, setShowDischargeConfirm] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [submitError, setSubmitError] = useState("");
+    const [showTransferModal, setShowTransferModal] = useState(false);
+    const [patientToTransfer, setPatientToTransfer] = useState(null);
 
     useEffect(() => {
         const getPatient = async () => {
@@ -99,7 +102,9 @@ function PatientRecordPage() {
                     <h1>Patient Record: {patient.name}</h1>
 
                     <div className="patient-record-actions">
-                        <button>Transfer</button>
+                        <button onClick={() => setShowTransferModal(true)}>
+                            Transfer
+                        </button>
                         <button onClick={() => setShowDischargeConfirm(true)}>
                             Discharge
                         </button>
@@ -176,6 +181,23 @@ function PatientRecordPage() {
                         patient={patient}
                         onCancel={() => setShowDischargeConfirm(false)}
                         onConfirm={handleDischarge}
+                    />
+                )}
+                {showTransferModal && (
+                    <TransferPatientModal
+                        patient={patient}
+                        currentWardId={patient.ward._id}
+                        onCancel={() => setShowTransferModal(false)}
+                        onConfirm={(destinationWardId) => {
+                            console.log(
+                                "Transfer patient:",
+                                patient._id,
+                                "to ward:",
+                                destinationWardId,
+                            );
+
+                            // API call will be implemented next
+                        }}
                     />
                 )}
             </main>

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import DischargeConfirmation from "../components/DischargeConfirmation";
+import TransferPatientModal from "../components/TransferPatientModal";
 
 function WardPatientsPage() {
     const { wardId } = useParams();
@@ -15,6 +16,8 @@ function WardPatientsPage() {
     const user = JSON.parse(localStorage.getItem("user"));
     const [successMessage, setSuccessMessage] = useState("");
     const [submitError, setSubmitError] = useState("");
+    const [patientToTransfer, setPatientToTransfer] = useState(null);
+    const [showTransferModal, setShowTransferModal] = useState(false);
 
     useEffect(() => {
         const getWardData = async () => {
@@ -141,7 +144,13 @@ function WardPatientsPage() {
                                     View
                                 </button>
 
-                                <button>Transfer</button>
+                                <button
+                                    onClick={() =>
+                                        setPatientToTransfer(patient)
+                                    }
+                                >
+                                    Transfer
+                                </button>
 
                                 <button
                                     onClick={() =>
@@ -154,6 +163,23 @@ function WardPatientsPage() {
                         </div>
                     ))}
                 </div>
+                {patientToTransfer && (
+                    <TransferPatientModal
+                        patient={patientToTransfer}
+                        currentWardId={wardId}
+                        onCancel={() => setPatientToTransfer(null)}
+                        onConfirm={(destinationWardId) => {
+                            console.log(
+                                "Transfer patient:",
+                                patientToTransfer._id,
+                                "to ward:",
+                                destinationWardId,
+                            );
+
+                            // API call will be implemented in the next subtask
+                        }}
+                    />
+                )}
                 {patientToDischarge && (
                     <DischargeConfirmation
                         patient={patientToDischarge}
