@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import axios from "axios";
 
 function PatientAdmissionPage() {
     const { wardId } = useParams();
@@ -12,7 +13,7 @@ function PatientAdmissionPage() {
     const [contactNumber, setContactNumber] = useState("");
     const [errors, setErrors] = useState({});
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const newErrors = {};
@@ -53,17 +54,31 @@ function PatientAdmissionPage() {
             contactNumber,
             ward: wardId,
         });
+
+        try {
+            const token = localStorage.getItem("token");
+
+            await axios.post(
+                "http://localhost:5000/api/patients",
+                {
+                    name,
+                    dateOfBirth,
+                    gender,
+                    contactNumber,
+                    ward: wardId,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
+            navigate(`/wards/${wardId}`);
+        } catch (error) {
+            console.error("Unable to admit patient:", error);
+        }
     };
-
-    // Patient creation API will be implemented in a later subtask.
-    console.log({
-        name,
-        dateOfBirth,
-        gender,
-        contactNumber,
-        ward: wardId,
-    });
-
     const handleCancel = () => {
         navigate(`/wards/${wardId}`);
     };
