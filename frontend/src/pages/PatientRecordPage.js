@@ -15,6 +15,8 @@ function PatientRecordPage() {
     const [submitError, setSubmitError] = useState("");
     const [showTransferModal, setShowTransferModal] = useState(false);
     const [patientToTransfer, setPatientToTransfer] = useState(null);
+    const [transferSuccess, setTransferSuccess] = useState("");
+    const [transferError, setTransferError] = useState("");
 
     useEffect(() => {
         const getPatient = async () => {
@@ -94,6 +96,9 @@ function PatientRecordPage() {
     };
     const handleTransfer = async (destinationWardId) => {
         try {
+            setTransferSuccess("");
+            setTransferError("");
+
             const token = localStorage.getItem("token");
 
             await axios.patch(
@@ -109,10 +114,19 @@ function PatientRecordPage() {
             );
 
             setShowTransferModal(false);
+            setTransferSuccess("Patient transferred successfully");
 
-            navigate(`/wards/${destinationWardId}`);
+            setTimeout(() => {
+                navigate(`/wards/${destinationWardId}`);
+            }, 1000);
         } catch (error) {
-            console.error("Unable to transfer patient:", error);
+            setShowTransferModal(false);
+
+            if (error.response?.data?.message) {
+                setTransferError(error.response.data.message);
+            } else {
+                setTransferError("Unable to transfer patient");
+            }
         }
     };
     return (
@@ -135,6 +149,13 @@ function PatientRecordPage() {
                 {error && <p className="error-message">{error}</p>}
                 {successMessage && (
                     <p className="success-message">{successMessage}</p>
+                )}
+                {transferSuccess && (
+                    <p className="success-message">{transferSuccess}</p>
+                )}
+
+                {transferError && (
+                    <p className="error-message">{transferError}</p>
                 )}
                 <section className="record-section">
                     <div className="record-section-header">

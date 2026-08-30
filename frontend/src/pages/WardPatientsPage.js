@@ -18,6 +18,8 @@ function WardPatientsPage() {
     const [submitError, setSubmitError] = useState("");
     const [patientToTransfer, setPatientToTransfer] = useState(null);
     const [showTransferModal, setShowTransferModal] = useState(false);
+    const [transferSuccess, setTransferSuccess] = useState("");
+    const [transferError, setTransferError] = useState("");
 
     useEffect(() => {
         const getWardData = async () => {
@@ -99,7 +101,12 @@ function WardPatientsPage() {
 
     const handleTransfer = async (destinationWardId) => {
         try {
+            setTransferSuccess("");
+            setTransferError("");
+
             const token = localStorage.getItem("token");
+
+            const patientName = patientToTransfer.name;
 
             await axios.patch(
                 `http://localhost:5000/api/patients/${patientToTransfer._id}/transfer`,
@@ -120,8 +127,15 @@ function WardPatientsPage() {
             );
 
             setPatientToTransfer(null);
+            setTransferSuccess(`${patientName} transferred successfully`);
         } catch (error) {
-            console.error("Unable to transfer patient:", error);
+            setPatientToTransfer(null);
+
+            if (error.response?.data?.message) {
+                setTransferError(error.response.data.message);
+            } else {
+                setTransferError("Unable to transfer patient");
+            }
         }
     };
     return (
@@ -148,7 +162,13 @@ function WardPatientsPage() {
                 {successMessage && (
                     <p className="success-message">{successMessage}</p>
                 )}
+                {transferSuccess && (
+                    <p className="success-message">{transferSuccess}</p>
+                )}
 
+                {transferError && (
+                    <p className="error-message">{transferError}</p>
+                )}
                 {submitError && <p className="error-message">{submitError}</p>}
 
                 <div className="patient-list">
