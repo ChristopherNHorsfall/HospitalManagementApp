@@ -253,3 +253,8 @@ body {
     padding: 8px 14px;
     cursor: pointer;
 }
+.form-error {
+    color: red;
+    margin-top: 5px;
+    font-size: 14px;
+}

@@ -14,6 +14,7 @@ function PatientEditPage() {
     const [wardName, setWardName] = useState("");
 
     const [error, setError] = useState("");
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const getPatient = async () => {
@@ -51,7 +52,37 @@ function PatientEditPage() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Patient update API will be implemented in the next subtask.
+        const newErrors = {};
+
+        if (!name.trim()) {
+            newErrors.name = "Patient name is required";
+        }
+
+        if (!dateOfBirth) {
+            newErrors.dateOfBirth = "Date of birth is required";
+        } else {
+            const dob = new Date(dateOfBirth);
+            const today = new Date();
+
+            if (dob > today) {
+                newErrors.dateOfBirth = "Date of birth cannot be in the future";
+            }
+        }
+
+        if (!gender) {
+            newErrors.gender = "Gender is required";
+        }
+
+        if (!contactNumber.trim()) {
+            newErrors.contactNumber = "Contact number is required";
+        }
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
+
         console.log({
             name,
             dateOfBirth,
@@ -93,6 +124,9 @@ function PatientEditPage() {
                             onChange={(event) => setName(event.target.value)}
                             required
                         />
+                        {errors.name && (
+                            <p className="form-error">{errors.name}</p>
+                        )}
                     </div>
 
                     <div className="form-group">
@@ -107,6 +141,9 @@ function PatientEditPage() {
                             }
                             required
                         />
+                        {errors.dateOfBirth && (
+                            <p className="form-error">{errors.dateOfBirth}</p>
+                        )}
                     </div>
 
                     <div className="form-group">
@@ -123,6 +160,9 @@ function PatientEditPage() {
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
+                        {errors.gender && (
+                            <p className="form-error">{errors.gender}</p>
+                        )}
                     </div>
 
                     <div className="form-group">
@@ -137,6 +177,9 @@ function PatientEditPage() {
                             }
                             required
                         />
+                        {errors.contactNumber && (
+                            <p className="form-error">{errors.contactNumber}</p>
+                        )}
                     </div>
 
                     <div className="form-group">
