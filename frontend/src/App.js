@@ -5,6 +5,7 @@ import WardsPage from "./pages/WardsPage";
 import WardPatientsPage from "./pages/WardPatientsPage";
 import PatientAdmissionPage from "./pages/PatientAdmissionPage";
 import PatientRecordPage from "./pages/PatientRecordPage";
+import PatientEditPage from "./pages/PatientEditPage";
 
 import "./App.css";
 
@@ -53,6 +54,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <PatientRecordPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/patients/:patientId/edit"
+                    element={
+                        <ProtectedRoute>
+                            <PatientEditPage />
                         </ProtectedRoute>
                     }
                 />

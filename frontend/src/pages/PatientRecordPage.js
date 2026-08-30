@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
 function PatientRecordPage() {
     const { patientId } = useParams();
-
+    const navigate = useNavigate();
     const [patient, setPatient] = useState(null);
     const [error, setError] = useState("");
 
@@ -71,7 +71,13 @@ function PatientRecordPage() {
                 <section className="record-section">
                     <div className="record-section-header">
                         <h2>Basic Details</h2>
-                        <button>Edit</button>
+                        <button
+                            onClick={() =>
+                                navigate(`/patients/${patientId}/edit`)
+                            }
+                        >
+                            Edit
+                        </button>
                     </div>
 
                     <p>
