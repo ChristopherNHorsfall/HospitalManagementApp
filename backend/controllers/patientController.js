@@ -123,9 +123,34 @@ const updatePatient = async (req, res) => {
     }
 };
 
+const dischargePatient = async (req, res) => {
+    try {
+        const patient = await Patient.findById(req.params.patientId);
+
+        if (!patient) {
+            return res.status(404).json({
+                message: "Patient not found",
+            });
+        }
+
+        await patient.deleteOne();
+
+        res.status(200).json({
+            message: "Patient discharged successfully",
+        });
+    } catch (error) {
+        console.error("Error discharging patient:", error);
+
+        res.status(500).json({
+            message: "Server error",
+        });
+    }
+};
+
 module.exports = {
     getPatientsByWard,
     getPatientById,
     createPatient,
     updatePatient,
+    dischargePatient,
 };

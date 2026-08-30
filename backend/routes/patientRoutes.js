@@ -4,6 +4,7 @@ const {
     getPatientById,
     createPatient,
     updatePatient,
+    dischargePatient,
 } = require("../controllers/patientController");
 const protect = require("../middleware/authMiddleware");
 const authorizeRoles = require("../middleware/roleMiddleware");
@@ -16,4 +17,6 @@ router.get("/:patientId", protect, getPatientById);
 router.put("/:patientId", protect, updatePatient);
 
 router.post("/", protect, authorizeRoles("doctor"), createPatient);
+
+router.delete("/:patientId", protect,authorizeRoles("doctor"), dischargePatient);
 module.exports = router;

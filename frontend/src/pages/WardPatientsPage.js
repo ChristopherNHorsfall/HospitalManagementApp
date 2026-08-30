@@ -56,6 +56,30 @@ function WardPatientsPage() {
         navigate(`/patients/${patientId}`);
     };
 
+    const handleDischarge = async () => {
+        try {
+            const token = localStorage.getItem("token");
+
+            await axios.delete(
+                `http://localhost:5000/api/patients/${patientToDischarge._id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
+            setPatients(
+                patients.filter(
+                    (patient) => patient._id !== patientToDischarge._id,
+                ),
+            );
+
+            setPatientToDischarge(null);
+        } catch (error) {
+            console.error("Unable to discharge patient:", error);
+        }
+    };
     return (
         <>
             <Navbar />
@@ -116,9 +140,7 @@ function WardPatientsPage() {
                     <DischargeConfirmation
                         patient={patientToDischarge}
                         onCancel={() => setPatientToDischarge(null)}
-                        onConfirm={() => {
-                            // Delete API will be added later
-                        }}
+                        onConfirm={handleDischarge}
                     />
                 )}
             </main>
