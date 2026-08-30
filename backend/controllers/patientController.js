@@ -1,4 +1,5 @@
 const Patient = require("../models/Patient");
+const Ward = require("../models/Ward");
 
 const getPatientsByWard = async (req, res) => {
     try {
@@ -147,10 +148,60 @@ const dischargePatient = async (req, res) => {
     }
 };
 
+const transferPatient = async (req, res) => {
+    try {
+        const { ward } = req.body;
+
+        if (!ward) {
+            return res.status(400).json({
+                message: "Destination ward is required",
+            });
+        }
+
+        const patient = await Patient.findById(req.params.patientId);
+
+        if (!patient) {
+            return res.status(404).json({
+                message: "Patient not found",
+            });
+        }
+
+        const destinationWard = await Ward.findById(ward);
+
+        if (!destinationWard) {
+            return res.status(404).json({
+                message: "Destination ward not found",
+            });
+        }
+
+        if (patient.ward.toString() === ward) {
+            return res.status(400).json({
+                message: "Patient is already assigned to this ward",
+            });
+        }
+
+        patient.ward = ward;
+
+        const updatedPatient = await patient.save();
+
+        res.status(200).json({
+            message: "Patient transferred successfully",
+            patient: updatedPatient,
+        });
+    } catch (error) {
+        console.error("Error transferring patient:", error);
+
+        res.status(500).json({
+            message: "Server error",
+        });
+    }
+};
+
 module.exports = {
     getPatientsByWard,
     getPatientById,
     createPatient,
     updatePatient,
     dischargePatient,
+    transferPatient,
 };

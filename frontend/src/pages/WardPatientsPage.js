@@ -96,6 +96,34 @@ function WardPatientsPage() {
             }
         }
     };
+
+    const handleTransfer = async (destinationWardId) => {
+        try {
+            const token = localStorage.getItem("token");
+
+            await axios.patch(
+                `http://localhost:5000/api/patients/${patientToTransfer._id}/transfer`,
+                {
+                    ward: destinationWardId,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+
+            setPatients(
+                patients.filter(
+                    (patient) => patient._id !== patientToTransfer._id,
+                ),
+            );
+
+            setPatientToTransfer(null);
+        } catch (error) {
+            console.error("Unable to transfer patient:", error);
+        }
+    };
     return (
         <>
             <Navbar />
@@ -168,16 +196,7 @@ function WardPatientsPage() {
                         patient={patientToTransfer}
                         currentWardId={wardId}
                         onCancel={() => setPatientToTransfer(null)}
-                        onConfirm={(destinationWardId) => {
-                            console.log(
-                                "Transfer patient:",
-                                patientToTransfer._id,
-                                "to ward:",
-                                destinationWardId,
-                            );
-
-                            // API call will be implemented in the next subtask
-                        }}
+                        onConfirm={handleTransfer}
                     />
                 )}
                 {patientToDischarge && (
