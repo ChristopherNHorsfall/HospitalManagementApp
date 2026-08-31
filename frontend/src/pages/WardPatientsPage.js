@@ -33,10 +33,7 @@ function WardPatientsPage() {
                 };
 
                 // Get wards
-                const wardsResponse = await axios.get(
-                    "/api/wards",
-                    config,
-                );
+                const wardsResponse = await axios.get("/api/wards", config);
 
                 const selectedWard = wardsResponse.data.find(
                     (ward) => ward._id === wardId,
@@ -69,14 +66,11 @@ function WardPatientsPage() {
             setSubmitError("");
             const token = localStorage.getItem("token");
 
-            await axios.delete(
-                `http://localhost:5000/api/patients/${patientToDischarge._id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+            await axios.delete(`/api/patients/${patientToDischarge._id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
                 },
-            );
+            });
 
             const dischargedName = patientToDischarge.name;
 
